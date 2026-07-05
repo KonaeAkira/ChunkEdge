@@ -82,7 +82,7 @@ impl Plugin for ClientPlugin {
                         .after(handle_layer_messages),
                     cleanup_chunks_after_client_despawn.after(update_view_and_layers),
                     crate::spawn::update_respawn_position.after(update_view_and_layers),
-                    crate::spawn::respawn.after(crate::spawn::update_respawn_position),
+                    crate::spawn::respawn.before(update_view_and_layers),
                     update_old_view_dist.after(update_view_and_layers),
                     update_game_mode,
                     update_food_saturation_health,
@@ -912,8 +912,8 @@ fn handle_layer_messages(
     );
 }
 
-/// This message will be emitted when a entity is unloaded for a client (e.g when
-/// moving out of range of the entity).
+/// This message will be emitted when a entity is unloaded for a client (e.g
+/// when moving out of range of the entity).
 #[derive(Debug, Clone, PartialEq, Message)]
 pub struct UnloadEntityForClientMessage {
     /// The client to unload the entity for.
